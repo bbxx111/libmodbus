@@ -48,6 +48,13 @@ function usage() {
     WScript.Echo(txt);
 }
 
+/* parse the version number from the configuration line */
+function parseVersionNumber(s) {
+    var startPos = s.lastIndexOf("[") + 1;
+    var endPos = s.lastIndexOf("]");
+    return s.substr(startPos, endPos - startPos);
+}
+
 /* read the version from the configuration file */
 function readVersion() {
     var fso, cf, ln, s;
@@ -57,11 +64,11 @@ function readVersion() {
         ln = cf.ReadLine();
         s = new String(ln);
         if (s.search(/^m4_define\(\[libmodbus_version_major/) != -1) {
-            verMajor = s.substr(s.indexOf(",") + 3, 1);
+            verMajor = parseVersionNumber(s);
         } else if (s.search(/^m4_define\(\[libmodbus_version_minor/) != -1) {
-            verMinor = s.substr(s.indexOf(",") + 3, 1);
+            verMinor = parseVersionNumber(s);
         } else if (s.search(/^m4_define\(\[libmodbus_version_micro/) != -1) {
-            verMicro = s.substr(s.indexOf(",") + 3, 1);
+            verMicro = parseVersionNumber(s);
         }
     }
     cf.Close();
